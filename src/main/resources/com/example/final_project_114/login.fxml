@@ -25,6 +25,7 @@
 
                         <VBox alignment="CENTER" spacing="8">
                             <children>
+                                <Label text="⌚" style="-fx-font-size: 48px;"/>
                                 <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Crown &amp; Dial" />
                                 <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Sign in to your account" />
                             </children>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.final_project_114.AdminDashboardController"
+            style="-fx-background-color: #ecf0f1;">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #34495e; -fx-padding: 15;">
+            <children>
+                <Label text="⚙️ Admin Dashboard" style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="adminLabel" text="Admin" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="Logout" onAction="#handleLogout"
+                        style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- Center Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+            <children>
+
+                <!-- Statistics Cards -->
+                <HBox spacing="20" alignment="CENTER">
+                    <children>
+                        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="📦" style="-fx-font-size: 40px;"/>
+                                <Label fx:id="totalWatchesLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+                                <Label text="Total Watches" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="👥" style="-fx-font-size: 40px;"/>
+                                <Label fx:id="totalUsersLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                                <Label text="Total Users" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                            </children>
+                        </VBox>
+
+                        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 30; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="💰" style="-fx-font-size: 40px;"/>
+                                <Label fx:id="totalRevenueLabel" text="0.00" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #e67e22;"/>
+                                <Label text="Total Value" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <!-- Watch Management Section -->
+                <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <children>
+                                <Label text="Watch Inventory" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="➕ Add New Watch" onAction="#handleAddWatch"
+                                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="watchTable" prefHeight="400">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                                <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" />
+                                <TableColumn fx:id="brandColumn" text="Brand" prefWidth="120" />
+                                <TableColumn fx:id="priceColumn" text="Price" prefWidth="100" />
+                                <TableColumn fx:id="stockColumn" text="Stock" prefWidth="80" />
+                                <TableColumn fx:id="categoryColumn" text="Category" prefWidth="100" />
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="180" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>

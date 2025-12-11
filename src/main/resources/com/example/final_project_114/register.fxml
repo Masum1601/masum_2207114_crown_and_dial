@@ -27,6 +27,7 @@
 
                         <VBox alignment="CENTER" spacing="8">
                             <children>
+                                <Label text="⌚" style="-fx-font-size: 48px;"/>
                                 <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="CREATE ACCOUNT" />
                                 <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Join our luxury watch collection" />
                             </children>

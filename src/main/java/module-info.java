@@ -11,6 +11,7 @@ module com.example.final_project_114 {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires annotations;
 
     opens com.example.final_project_114 to javafx.fxml;
     exports com.example.final_project_114;

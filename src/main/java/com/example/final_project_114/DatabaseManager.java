@@ -50,7 +50,8 @@ public class DatabaseManager {
                     "quantity INTEGER DEFAULT 1," +
                     "added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY(user_id) REFERENCES users(id)," +
-                    "FOREIGN KEY(watch_id) REFERENCES watches(id))");
+                    "FOREIGN KEY(watch_id) REFERENCES watches(id)," +
+                    "UNIQUE(user_id, watch_id))");
 
             stmt.execute("CREATE TABLE IF NOT EXISTS comments (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
