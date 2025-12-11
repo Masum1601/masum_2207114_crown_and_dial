@@ -98,7 +98,7 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
             showMessage("Error loading page: " + e.getMessage(), "error");
-        }
+        } 
     }
 
     private void showMessage(String message, String type) {
