@@ -2,7 +2,6 @@ package com.example.final_project_114;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,8 +11,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserDashboardController {
 
@@ -111,7 +108,7 @@ public class UserDashboardController {
 
         Button viewBtn = new Button("👁️ View");
         viewBtn.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 5;");
-        viewBtn.setOnAction(e -> viewWatchDetails(id));
+        viewBtn.setOnAction(e -> viewWatchDetails(id, name, brand, price, desc, stock));
 
         buttonBox.getChildren().addAll(addToCartBtn, wishlistBtn, viewBtn);
 
@@ -178,8 +175,22 @@ public class UserDashboardController {
         }
     }
 
-    private void viewWatchDetails(int watchId) {
-        showAlert("Info", "Watch details view - Coming soon!", Alert.AlertType.INFORMATION);
+    private void viewWatchDetails(int id, String name, String brand, double price, String desc, int stock) {
+        Alert details = new Alert(Alert.AlertType.INFORMATION);
+        details.setTitle("Watch Details");
+        details.setHeaderText(name);
+
+        String content = String.format(
+                "Brand: %s\n" +
+                        "Price: $%.2f\n" +
+                        "Stock Available: %d\n\n" +
+                        "Description:\n%s",
+                brand, price, stock, desc != null ? desc : "No description available"
+        );
+
+        details.setContentText(content);
+        details.getDialogPane().setMinWidth(400);
+        details.showAndWait();
     }
 
     private void updateCartCount() {
@@ -251,7 +262,7 @@ public class UserDashboardController {
 
     @FXML
     private void handleWishlist() {
-        showAlert("Info", "Wishlist view - Coming soon!", Alert.AlertType.INFORMATION);
+        loadScene("wishlist.fxml", "My Wishlist - Crown & Dial");
     }
 
     @FXML
@@ -268,6 +279,7 @@ public class UserDashboardController {
             stage.setTitle(title);
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert("Error", "Failed to load page: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
