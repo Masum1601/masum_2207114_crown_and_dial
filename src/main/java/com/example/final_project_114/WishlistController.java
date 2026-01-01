@@ -1,5 +1,6 @@
 package com.example.final_project_114;
 
+import com.example.final_project_114.model.WishlistItem;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
 
 public class WishlistController {
+    private static final Logger logger = LoggerFactory.getLogger(WishlistController.class);
 
     @FXML private TableView<WishlistItem> wishlistTable;
     @FXML private TableColumn<WishlistItem, String> nameColumn;
@@ -136,7 +140,7 @@ public class WishlistController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to load wishlist items", e);
             showAlert("Error", "Failed to load wishlist items", Alert.AlertType.ERROR);
         }
     }
@@ -180,7 +184,7 @@ public class WishlistController {
             showAlert("Success", item.getWatchName() + " moved to cart!", Alert.AlertType.INFORMATION);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to move item to cart", e);
             showAlert("Error", "Failed to move item to cart", Alert.AlertType.ERROR);
         }
     }
@@ -205,7 +209,7 @@ public class WishlistController {
                     showAlert("Success", "Item removed from wishlist", Alert.AlertType.INFORMATION);
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to remove item", e);
                     showAlert("Error", "Failed to remove item", Alert.AlertType.ERROR);
                 }
             }
@@ -242,7 +246,7 @@ public class WishlistController {
                     showAlert("Success", "Wishlist cleared", Alert.AlertType.INFORMATION);
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to clear wishlist", e);
                     showAlert("Error", "Failed to clear wishlist", Alert.AlertType.ERROR);
                 }
             }
@@ -267,7 +271,7 @@ public class WishlistController {
             stage.setScene(new Scene(root));
             stage.setTitle(title);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load scene: {}", fxmlFile, e);
         }
     }
 
@@ -277,34 +281,5 @@ public class WishlistController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public static class WishlistItem {
-        private final IntegerProperty wishlistId;
-        private final IntegerProperty watchId;
-        private final StringProperty watchName;
-        private final StringProperty brand;
-        private final DoubleProperty price;
-        private final StringProperty category;
-        private final IntegerProperty stock;
-
-        public WishlistItem(int wishlistId, int watchId, String watchName, String brand,
-                            double price, String category, int stock) {
-            this.wishlistId = new SimpleIntegerProperty(wishlistId);
-            this.watchId = new SimpleIntegerProperty(watchId);
-            this.watchName = new SimpleStringProperty(watchName);
-            this.brand = new SimpleStringProperty(brand);
-            this.price = new SimpleDoubleProperty(price);
-            this.category = new SimpleStringProperty(category);
-            this.stock = new SimpleIntegerProperty(stock);
-        }
-
-        public int getWishlistId() { return wishlistId.get(); }
-        public int getWatchId() { return watchId.get(); }
-        public String getWatchName() { return watchName.get(); }
-        public String getBrand() { return brand.get(); }
-        public double getPrice() { return price.get(); }
-        public String getCategory() { return category.get(); }
-        public int getStock() { return stock.get(); }
     }
 }

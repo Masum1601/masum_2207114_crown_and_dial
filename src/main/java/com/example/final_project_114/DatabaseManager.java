@@ -1,8 +1,13 @@
 package com.example.final_project_114;
 
+import com.example.final_project_114.util.PasswordUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 
 public class DatabaseManager {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
     private static final String DB_URL = "jdbc:sqlite:watchstore.db";
     private static Connection connection;
 
@@ -58,17 +63,44 @@ public class DatabaseManager {
                     "user_id INTEGER," +
                     "watch_id INTEGER," +
                     "comment_text TEXT NOT NULL," +
-                    "rating INTEGER," +
+                    "rating INTEGER CHECK(rating >= 1 AND rating <= 5)," +
                     "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
                     "FOREIGN KEY(user_id) REFERENCES users(id)," +
                     "FOREIGN KEY(watch_id) REFERENCES watches(id))");
 
-            stmt.execute("INSERT OR IGNORE INTO users (username, password, email, is_admin) " +
-                    "VALUES ('admin', 'admin123', 'admin@watchstore.com', 1)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS orders (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "user_id INTEGER NOT NULL," +
+                    "total_amount REAL NOT NULL," +
+                    "status TEXT DEFAULT 'Pending'," +
+                    "order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    "FOREIGN KEY(user_id) REFERENCES users(id))");
 
-            System.out.println("Database initialized successfully!");
+            stmt.execute("CREATE TABLE IF NOT EXISTS order_items (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "order_id INTEGER NOT NULL," +
+                    "watch_id INTEGER NOT NULL," +
+                    "quantity INTEGER NOT NULL," +
+                    "price REAL NOT NULL," +
+                    "FOREIGN KEY(order_id) REFERENCES orders(id)," +
+                    "FOREIGN KEY(watch_id) REFERENCES watches(id))");
+
+            PreparedStatement checkAdmin = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM users WHERE username = 'admin'");
+            ResultSet rs = checkAdmin.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                String hashedPassword = PasswordUtil.hashPassword("admin123");
+                PreparedStatement insertAdmin = connection.prepareStatement(
+                        "INSERT INTO users (username, password, email, is_admin) VALUES (?, ?, ?, 1)");
+                insertAdmin.setString(1, "admin");
+                insertAdmin.setString(2, hashedPassword);
+                insertAdmin.setString(3, "admin@watchstore.com");
+                insertAdmin.executeUpdate();
+            }
+
+            logger.info("Database initialized successfully!");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error initializing database", e);
         }
     }
 
@@ -76,9 +108,10 @@ public class DatabaseManager {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
+                logger.info("Database connection closed");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error closing database connection", e);
         }
     }
 }

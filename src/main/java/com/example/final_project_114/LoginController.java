@@ -1,11 +1,15 @@
 package com.example.final_project_114;
 
+import com.example.final_project_114.util.PasswordUtil;
+import com.example.final_project_114.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginController {
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @FXML
     private TextField usernameField;
@@ -37,40 +42,47 @@ public class LoginController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (!ValidationUtil.isNotEmpty(username) || !ValidationUtil.isNotEmpty(password)) {
             showMessage("Please fill in all fields", "error");
             return;
         }
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(
-                     "SELECT * FROM users WHERE username = ? AND password = ?")) {
+                     "SELECT * FROM users WHERE username = ?")) {
 
             pstmt.setString(1, username);
-            pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                int userId = rs.getInt("id");
-                String email = rs.getString("email");
-                boolean isAdmin = rs.getInt("is_admin") == 1;
+                String storedPassword = rs.getString("password");
+                
+                if (PasswordUtil.verifyPassword(password, storedPassword)) {
+                    int userId = rs.getInt("id");
+                    String email = rs.getString("email");
+                    boolean isAdmin = rs.getInt("is_admin") == 1;
 
-                SessionManager.getInstance().setCurrentUser(userId, username, email, isAdmin);
+                    SessionManager.getInstance().setCurrentUser(userId, username, email, isAdmin);
 
-                showMessage("Login successful! Welcome " + username, "success");
+                    showMessage("Login successful! Welcome " + username, "success");
+                    logger.info("User logged in: {}", username);
 
-                if (isAdmin) {
-                    loadScene("admin-dashboard.fxml", "Admin Dashboard");
+                    if (isAdmin) {
+                        loadScene("admin-dashboard.fxml", "Admin Dashboard");
+                    } else {
+                        loadScene("user-dashboard.fxml", "Watch Store");
+                    }
                 } else {
-                    loadScene("user-dashboard.fxml", "Watch Store");
+                    showMessage("Invalid username or password", "error");
+                    logger.warn("Failed login attempt for user: {}", username);
                 }
-
             } else {
                 showMessage("Invalid username or password", "error");
+                logger.warn("Failed login attempt for non-existent user: {}", username);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Database error during login", e);
             showMessage("Database error: " + e.getMessage(), "error");
         }
     }
@@ -96,9 +108,8 @@ public class LoginController {
             stage.setTitle(title);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            showMessage("Error loading page: " + e.getMessage(), "error");
-        } 
+            logger.error("Error loading scene: {}", fxmlFile, e);
+        }
     }
 
     private void showMessage(String message, String type) {

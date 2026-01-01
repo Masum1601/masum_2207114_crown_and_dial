@@ -6,74 +6,77 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.final_project_114.UserDashboardController"
-            style="-fx-background-color: #f5f5f5;">
+            style="-fx-background: linear-gradient(to bottom, #f8f9fa, #e9ecef);">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background: linear-gradient(to right, #1a1a2e, #16213e); -fx-padding: 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 3);">
             <children>
-                <Label text="⌚ Crown &amp; Dial" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label text="⌚ Crown &amp; Dial" style="-fx-text-fill: #1e90ff; -fx-font-size: 28px; -fx-font-weight: bold; -fx-letter-spacing: 1.5;"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
 
-                <TextField fx:id="searchField" promptText="Search watches..."
-                           style="-fx-pref-width: 250px; -fx-background-radius: 20; -fx-padding: 8 15;"/>
+                <TextField fx:id="searchField" promptText="Search luxury watches..."
+                           style="-fx-pref-width: 280px; -fx-background-radius: 25; -fx-padding: 10 20; -fx-background-color: rgba(255,255,255,0.95); -fx-border-color: #2563eb; -fx-border-width: 1; -fx-border-radius: 25;"/>
 
-                <Button text="🔍 Search" onAction="#handleSearch"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
+                <Button text="🔍" onAction="#handleSearch"
+                        style="-fx-background-color: linear-gradient(to right, #2563eb, #1e40af); -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 25; -fx-cursor: hand; -fx-font-size: 16px;"/>
 
                 <Button fx:id="cartButton" text="🛒 Cart (0)" onAction="#handleCart"
-                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
+                        style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 25; -fx-cursor: hand; -fx-font-weight: bold;"/>
 
                 <Button text="❤️ Wishlist" onAction="#handleWishlist"
-                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
+                        style="-fx-background-color: #475569; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 25; -fx-cursor: hand; -fx-font-weight: bold;"/>
 
-                <Label fx:id="userLabel" text="User" style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                <Button text="📦 Orders" onAction="#handleOrders"
+                        style="-fx-background-color: #059669; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 25; -fx-cursor: hand; -fx-font-weight: bold;"/>
+
+                <Label fx:id="userLabel" text="User" style="-fx-text-fill: #FFFFFF; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 5 10;"/>
 
                 <Button text="Logout" onAction="#handleLogout"
-                        style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand;"/>
+                        style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 25; -fx-cursor: hand;"/>
             </children>
         </HBox>
     </top>
 
     <left>
-        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-pref-width: 200;">
+        <VBox spacing="12" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-padding: 25; -fx-pref-width: 220; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 3, 0); -fx-border-color: #2563eb; -fx-border-width: 0 1 0 0;">
             <children>
-                <Label text="Categories" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <Separator/>
+                <Label text="Categories" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1a1a2e;"/>
+                <Separator style="-fx-background-color: #2563eb;"/>
 
                 <Button text="All Watches" onAction="#filterAll" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;"/>
+                        style="-fx-background-color: transparent; -fx-text-fill: #1a1a2e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;"/>
 
-                <Button text="Luxury" onAction="#filterLuxury" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;"/>
+                <Button text="⭐ Luxury" onAction="#filterLuxury" maxWidth="Infinity"
+                        style="-fx-background-color: transparent; -fx-text-fill: #1a1a2e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;"/>
 
-                <Button text="Sport" onAction="#filterSport" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;"/>
+                <Button text="⚡ Sport" onAction="#filterSport" maxWidth="Infinity"
+                        style="-fx-background-color: transparent; -fx-text-fill: #1a1a2e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;"/>
 
-                <Button text="Classic" onAction="#filterClassic" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;"/>
+                <Button text="🎩 Classic" onAction="#filterClassic" maxWidth="Infinity"
+                        style="-fx-background-color: transparent; -fx-text-fill: #1a1a2e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;"/>
 
-                <Button text="Smart" onAction="#filterSmart" maxWidth="Infinity"
-                        style="-fx-background-color: transparent; -fx-text-fill: #34495e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand;"/>
+                <Button text="📱 Smart" onAction="#filterSmart" maxWidth="Infinity"
+                        style="-fx-background-color: transparent; -fx-text-fill: #1a1a2e; -fx-alignment: CENTER_LEFT; -fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;"/>
             </children>
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="20" style="-fx-padding: 20;">
+        <VBox spacing="25" style="-fx-padding: 25;">
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="15">
+                <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2); -fx-border-color: #2563eb; -fx-border-width: 1; -fx-border-radius: 10;">
                     <children>
-                        <Label text="Available Watches" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                        <Label text="Our Collection" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1a1a2e;"/>
                         <Region HBox.hgrow="ALWAYS"/>
                         <ComboBox fx:id="sortComboBox" promptText="Sort by" onAction="#handleSort"
-                                  style="-fx-pref-width: 150px;"/>
+                                  style="-fx-pref-width: 180px; -fx-background-radius: 8; -fx-border-color: #2563eb; -fx-border-radius: 8;"/>
                     </children>
                 </HBox>
 
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-background: transparent;">
                     <content>
-                        <FlowPane fx:id="watchContainer" hgap="20" vgap="20" style="-fx-padding: 10;"/>
+                        <FlowPane fx:id="watchContainer" hgap="25" vgap="25" style="-fx-padding: 15;"/>
                     </content>
                 </ScrollPane>
             </children>

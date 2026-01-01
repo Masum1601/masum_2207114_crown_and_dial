@@ -12,12 +12,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.final_project_114.RegisterController">
+<BorderPane style="-fx-background: linear-gradient(to bottom right, #1a1a2e, #16213e, #0f3460);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.final_project_114.RegisterController">
 
     <center>
         <StackPane>
             <children>
-                <VBox alignment="CENTER" maxHeight="650" maxWidth="450" spacing="18" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 3);">
+                <VBox alignment="CENTER" maxHeight="650" maxWidth="450" spacing="18" style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 5); -fx-border-color: rgba(218, 165, 32, 0.3); -fx-border-width: 1; -fx-border-radius: 15;">
 
                     <padding>
                         <Insets bottom="40" left="50" right="50" top="40" />
@@ -28,42 +28,42 @@
                         <VBox alignment="CENTER" spacing="8">
                             <children>
                                 <Label text="⌚" style="-fx-font-size: 48px;"/>
-                                <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="CREATE ACCOUNT" />
-                                <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Join our luxury watch collection" />
+                                <Label style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-letter-spacing: 1.5; -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.3), 3, 0, 0, 1);" text="CREATE ACCOUNT" />
+                                <Label style="-fx-font-size: 14px; -fx-text-fill: #5a6c7d; -fx-font-weight: 500;" text="Join our luxury watch collection" />
                             </children>
                         </VBox>
 
                         <VBox spacing="8">
                             <children>
                                 <Label style="-fx-font-size: 13px; -fx-text-fill: #34495e; -fx-font-weight: bold;" text="Username" />
-                                <TextField fx:id="usernameField" promptText="Choose a username" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 5; -fx-border-color: #dfe6e9; -fx-border-radius: 5;" />
+                                <TextField fx:id="usernameField" promptText="Choose a username" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #2563eb; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-color: white;" />
                             </children>
                         </VBox>
 
                         <VBox spacing="8">
                             <children>
                                 <Label style="-fx-font-size: 13px; -fx-text-fill: #34495e; -fx-font-weight: bold;" text="Email Address" />
-                                <TextField fx:id="emailField" promptText="Enter your email" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 5; -fx-border-color: #dfe6e9; -fx-border-radius: 5;" />
+                                <TextField fx:id="emailField" promptText="Enter your email" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #2563eb; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-color: white;" />
                             </children>
                         </VBox>
 
                         <VBox spacing="8">
                             <children>
                                 <Label style="-fx-font-size: 13px; -fx-text-fill: #34495e; -fx-font-weight: bold;" text="Password" />
-                                <PasswordField fx:id="passwordField" promptText="Create a password" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 5; -fx-border-color: #dfe6e9; -fx-border-radius: 5;" />
+                                <PasswordField fx:id="passwordField" promptText="Create a password" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #2563eb; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-color: white;" />
                             </children>
                         </VBox>
 
                         <VBox spacing="8">
                             <children>
                                 <Label style="-fx-font-size: 13px; -fx-text-fill: #34495e; -fx-font-weight: bold;" text="Confirm Password" />
-                                <PasswordField fx:id="confirmPasswordField" promptText="Re-enter your password" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 5; -fx-border-color: #dfe6e9; -fx-border-radius: 5;" />
+                                <PasswordField fx:id="confirmPasswordField" promptText="Re-enter your password" style="-fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #2563eb; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-color: white;" />
                             </children>
                         </VBox>
 
                         <Label fx:id="messageLabel" style="-fx-font-size: 12px;" wrapText="true" />
 
-                        <Button fx:id="registerButton" maxWidth="Infinity" onAction="#handleRegister" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 14; -fx-cursor: hand; -fx-background-radius: 5;" text="REGISTER">
+                        <Button fx:id="registerButton" maxWidth="Infinity" onAction="#handleRegister" style="-fx-background-color: linear-gradient(to right, #2563eb, #1e40af); -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 15; -fx-cursor: hand; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.4), 10, 0, 0, 2);" text="REGISTER">
                             <cursor>
                                 <javafx.scene.Cursor fx:constant="HAND" />
                             </cursor>

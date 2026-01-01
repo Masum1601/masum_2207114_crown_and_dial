@@ -1,5 +1,6 @@
 package com.example.final_project_114;
 
+import com.example.final_project_114.model.CartItem;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +13,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
 
 public class CartController {
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
     @FXML private TableView<CartItem> cartTable;
     @FXML private TableColumn<CartItem, String> nameColumn;
@@ -128,7 +132,7 @@ public class CartController {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to load cart items", e);
             showAlert("Error", "Failed to load cart items", Alert.AlertType.ERROR);
         }
     }
@@ -151,7 +155,7 @@ public class CartController {
             updateTotals();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to update quantity", e);
             showAlert("Error", "Failed to update quantity", Alert.AlertType.ERROR);
         }
     }
@@ -175,7 +179,7 @@ public class CartController {
                     showAlert("Success", "Item removed from cart", Alert.AlertType.INFORMATION);
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to remove item", e);
                     showAlert("Error", "Failed to remove item", Alert.AlertType.ERROR);
                 }
             }
@@ -210,39 +214,70 @@ public class CartController {
     }
 
     private void processCheckout() {
-        try (Connection conn = DatabaseManager.getConnection()) {
+        Connection conn = null;
+        try {
+            conn = DatabaseManager.getConnection();
             conn.setAutoCommit(false);
 
-            try {
+            double totalAmount = cartItems.stream().mapToDouble(CartItem::getSubtotal).sum();
 
-                for (CartItem item : cartItems) {
-                    PreparedStatement updateStock = conn.prepareStatement(
-                            "UPDATE watches SET stock = stock - ? WHERE id = ?");
-                    updateStock.setInt(1, item.getQuantity());
-                    updateStock.setInt(2, item.getWatchId());
-                    updateStock.executeUpdate();
-                }
+            PreparedStatement insertOrder = conn.prepareStatement(
+                    "INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            insertOrder.setInt(1, SessionManager.getInstance().getUserId());
+            insertOrder.setDouble(2, totalAmount);
+            insertOrder.setString(3, "Pending");
+            insertOrder.executeUpdate();
 
-
-                PreparedStatement clearCart = conn.prepareStatement(
-                        "DELETE FROM cart WHERE user_id = ?");
-                clearCart.setInt(1, SessionManager.getInstance().getUserId());
-                clearCart.executeUpdate();
-
-                conn.commit();
-
-                showAlert("Success", "Order placed successfully!", Alert.AlertType.INFORMATION);
-                loadCartItems();
-                updateTotals();
-
-            } catch (SQLException e) {
-                conn.rollback();
-                throw e;
+            ResultSet generatedKeys = insertOrder.getGeneratedKeys();
+            int orderId = 0;
+            if (generatedKeys.next()) {
+                orderId = generatedKeys.getInt(1);
             }
 
+            for (CartItem item : cartItems) {
+                PreparedStatement insertOrderItem = conn.prepareStatement(
+                        "INSERT INTO order_items (order_id, watch_id, quantity, price) VALUES (?, ?, ?, ?)");
+                insertOrderItem.setInt(1, orderId);
+                insertOrderItem.setInt(2, item.getWatchId());
+                insertOrderItem.setInt(3, item.getQuantity());
+                insertOrderItem.setDouble(4, item.getPrice());
+                insertOrderItem.executeUpdate();
+
+                PreparedStatement updateStock = conn.prepareStatement(
+                        "UPDATE watches SET stock = stock - ? WHERE id = ?");
+                updateStock.setInt(1, item.getQuantity());
+                updateStock.setInt(2, item.getWatchId());
+                updateStock.executeUpdate();
+            }
+
+            PreparedStatement clearCart = conn.prepareStatement(
+                    "DELETE FROM cart WHERE user_id = ?");
+            clearCart.setInt(1, SessionManager.getInstance().getUserId());
+            clearCart.executeUpdate();
+
+            conn.commit();
+            logger.info("Order #{} created successfully for user {}", orderId, SessionManager.getInstance().getUserId());
+
+            showAlert("Success", "Order #" + orderId + " placed successfully!\nTotal: $" + 
+                    String.format("%.2f", totalAmount), Alert.AlertType.INFORMATION);
+            loadCartItems();
+            updateTotals();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Checkout failed", e);
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                logger.error("Rollback failed", ex);
+            }
             showAlert("Error", "Checkout failed: " + e.getMessage(), Alert.AlertType.ERROR);
+        } finally {
+            try {
+                if (conn != null) conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                logger.error("Failed to reset auto-commit", e);
+            }
         }
     }
 
@@ -272,7 +307,7 @@ public class CartController {
                     showAlert("Success", "Cart cleared", Alert.AlertType.INFORMATION);
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Failed to clear cart", e);
                     showAlert("Error", "Failed to clear cart", Alert.AlertType.ERROR);
                 }
             }
@@ -297,7 +332,7 @@ public class CartController {
             stage.setScene(new Scene(root));
             stage.setTitle(title);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to load scene: {}", fxmlFile, e);
         }
     }
 
@@ -307,37 +342,5 @@ public class CartController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    public static class CartItem {
-        private final IntegerProperty cartId;
-        private final IntegerProperty watchId;
-        private final StringProperty watchName;
-        private final StringProperty brand;
-        private final DoubleProperty price;
-        private final IntegerProperty quantity;
-        private final IntegerProperty stock;
-        private final DoubleProperty subtotal;
-
-        public CartItem(int cartId, int watchId, String watchName, String brand,
-                        double price, int quantity, int stock) {
-            this.cartId = new SimpleIntegerProperty(cartId);
-            this.watchId = new SimpleIntegerProperty(watchId);
-            this.watchName = new SimpleStringProperty(watchName);
-            this.brand = new SimpleStringProperty(brand);
-            this.price = new SimpleDoubleProperty(price);
-            this.quantity = new SimpleIntegerProperty(quantity);
-            this.stock = new SimpleIntegerProperty(stock);
-            this.subtotal = new SimpleDoubleProperty(price * quantity);
-        }
-
-        public int getCartId() { return cartId.get(); }
-        public int getWatchId() { return watchId.get(); }
-        public String getWatchName() { return watchName.get(); }
-        public String getBrand() { return brand.get(); }
-        public double getPrice() { return price.get(); }
-        public int getQuantity() { return quantity.get(); }
-        public int getStock() { return stock.get(); }
-        public double getSubtotal() { return subtotal.get(); }
     }
 }
