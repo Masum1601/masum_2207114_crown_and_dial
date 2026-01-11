@@ -29,7 +29,16 @@ public class RegisterController {
     private PasswordField passwordField;
 
     @FXML
+    private TextField passwordTextField;
+
+    @FXML
     private PasswordField confirmPasswordField;
+
+    @FXML
+    private TextField confirmPasswordTextField;
+
+    @FXML
+    private CheckBox showPasswordCheckBox;
 
     @FXML
     private Label messageLabel;
@@ -40,6 +49,35 @@ public class RegisterController {
     @FXML
     public void initialize() {
         confirmPasswordField.setOnAction(event -> handleRegister());
+        confirmPasswordTextField.setOnAction(event -> handleRegister());
+        
+        passwordTextField.textProperty().bindBidirectional(passwordField.textProperty());
+        confirmPasswordTextField.textProperty().bindBidirectional(confirmPasswordField.textProperty());
+    }
+
+    @FXML
+    private void handleShowPassword() {
+        if (showPasswordCheckBox.isSelected()) {
+            passwordTextField.setVisible(true);
+            passwordTextField.setManaged(true);
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+            
+            confirmPasswordTextField.setVisible(true);
+            confirmPasswordTextField.setManaged(true);
+            confirmPasswordField.setVisible(false);
+            confirmPasswordField.setManaged(false);
+        } else {
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            passwordTextField.setVisible(false);
+            passwordTextField.setManaged(false);
+            
+            confirmPasswordField.setVisible(true);
+            confirmPasswordField.setManaged(true);
+            confirmPasswordTextField.setVisible(false);
+            confirmPasswordTextField.setManaged(false);
+        }
     }
 
     @FXML

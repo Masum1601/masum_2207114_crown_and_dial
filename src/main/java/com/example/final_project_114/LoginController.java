@@ -27,6 +27,12 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
+    private TextField passwordTextField;
+
+    @FXML
+    private CheckBox showPasswordCheckBox;
+
+    @FXML
     private Label messageLabel;
 
     @FXML
@@ -35,6 +41,24 @@ public class LoginController {
     @FXML
     public void initialize() {
         passwordField.setOnAction(event -> handleLogin());
+        passwordTextField.setOnAction(event -> handleLogin());
+        
+        passwordTextField.textProperty().bindBidirectional(passwordField.textProperty());
+    }
+
+    @FXML
+    private void handleShowPassword() {
+        if (showPasswordCheckBox.isSelected()) {
+            passwordTextField.setVisible(true);
+            passwordTextField.setManaged(true);
+            passwordField.setVisible(false);
+            passwordField.setManaged(false);
+        } else {
+            passwordField.setVisible(true);
+            passwordField.setManaged(true);
+            passwordTextField.setVisible(false);
+            passwordTextField.setManaged(false);
+        }
     }
 
     @FXML
